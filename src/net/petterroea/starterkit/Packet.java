@@ -31,6 +31,10 @@ public class Packet {
 	 */
 	private String[] contents;
 	/**
+	 * The prefix used to identify the packet when recieved
+	 */
+	public final String prefix = "packet";
+	/**
 	 * Constructor for a packet. This is used for recieving
 	 * @param contents The data in the packet
 	 * @param ip The ip adress of the sender
