@@ -18,7 +18,10 @@
  */
 package net.petterroea.starterkit;
 /**
- * Basic packet class. Extend this and make your own class for each type of packet.
+ * Basic packet class. Extend this and make your own class for each type of packet.<br />
+ * <br />
+ * This is used for recieving and sending packets
+ * 
  * @author petterroea
  *
  */
@@ -28,17 +31,12 @@ public class Packet {
 	 */
 	private String[] contents;
 	/**
-	 * Ip-adress of the sender(That sendt this packet to you)
-	 */
-	private String ip;
-	/**
-	 * Constructor for a packet
+	 * Constructor for a packet. This is used for recieving
 	 * @param contents The data in the packet
 	 * @param ip The ip adress of the sender
 	 */
-	public Packet(String[] contents, String ip)
+	public Packet(String[] contents)
 	{
-		this.ip = ip;
 		this.contents = new String[contents.length - 1];
 		for(int i = 0; i < this.contents.length; i++)
 		{
@@ -46,12 +44,25 @@ public class Packet {
 		}
 	}
 	/**
-	 * Get the ip of the computer that sendt the packet to you
-	 * @return The ip of the computer that sendt the packet
+	 * Constructor that allows you to enter the raw code. Use this for sending
+	 * @param raw Raw data that is not splitted
 	 */
-	public String getIp()
+	public Packet(String raw)
 	{
-		return ip;
+		contents = raw.split(" ");
+	}
+	/**
+	 * Get the raw data of this packet
+	 * @return The raw data
+	 */
+	public String getRaw()
+	{
+		String returnme = "";
+		for(int i = 0; i < contents.length; i++)
+		{
+			returnme = returnme + contents[i];
+		}
+		return returnme;
 	}
 	/**
 	 * Get the entire packet data array
