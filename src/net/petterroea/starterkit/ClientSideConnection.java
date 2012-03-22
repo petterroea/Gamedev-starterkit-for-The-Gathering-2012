@@ -1,3 +1,21 @@
+/*
+ * ClientSideConnection.java
+ * 
+ * Part of the GameSDK starterkit made for the seminar at "The Gathering 2012 - At the end of the universe"
+ * 
+ * This source code is provided AS-IS and without any warranty. Use at own risk.
+ * You can use and modify this source any way you want, but please send me an E-mail to petterroea@skymiastudios.com
+ * if you make a game from it - I would like to keep a list of all games, as i am curious. You may also use this for games
+ * that cost money. So it is basically public domain, except that i own the rights to it, but give you the rights to use
+ * it for the purposes above. You cant sell this kit. You can sell a game based on it, but not the source code to this kit.
+ * Also, this big comment must stay in all code files that originated from the starterkit, no matter how much they are
+ * modified.
+ * 
+ * If you want support for this SDK, feel free to contact me. If you are at "The Gathering 2012", you can
+ * look for me in the creative lounge(Where i sit). If not, feel free to send me an E-Mail to the above
+ * adress. If you need normal java help, ask a mentor.
+ * 
+ */
 package net.petterroea.starterkit;
 
 import java.io.*;
@@ -56,13 +74,17 @@ public class ClientSideConnection {
 	 */
 	public boolean connected = false;
 	/**
-	 * Constructor for a connection to a server
+	 * Constructor for a connection to a server. If the IP is localhost, the game will try to connect to a server on the same ip as the server itself
 	 * @param ip The ip adress
 	 * @param port The port to be used. REMEMBER TO TELL USERS WHAT PORT THE GAME USES FOR COMMUNICATION. http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers is a important reference. Also, here is a tip: Let the user choose port, but supply a standardport
 	 * @throws IOException if something goes wrong while connecting
 	 */
 	public ClientSideConnection(String ip, int port) throws IOException
 	{
+		if(ip.equalsIgnoreCase("localhost"))
+		{
+			ip = InetAddress.getLocalHost().getHostAddress();
+		}
 		client = new Socket();
 		endPoint = new InetSocketAddress(ip, port);
 		client.connect(endPoint);
@@ -96,7 +118,6 @@ public class ClientSideConnection {
 					try{
 					synchronized(synch)
 					{
-						
 						String line = reader.readLine();
 						if(line != null)
 						{

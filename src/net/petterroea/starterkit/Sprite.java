@@ -236,4 +236,11 @@ public class Sprite {
 		}
 		return src[x][y];
 	}
+	/**
+	 * Returns the entire grid of sprites
+	 * @return The grid of sprites
+	 */
+	public BufferedImage[][] getGrid() {
+		return src;
+	}
 }

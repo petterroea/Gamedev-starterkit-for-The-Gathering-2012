@@ -35,9 +35,8 @@ public class Packet {
 	 */
 	public final String prefix = "packet";
 	/**
-	 * Constructor for a packet. This is used for recieving
+	 * Constructor for a packet. This is used for recieving, not by you.
 	 * @param contents The data in the packet
-	 * @param ip The ip adress of the sender
 	 */
 	public Packet(String[] contents)
 	{
@@ -64,7 +63,7 @@ public class Packet {
 		String returnme = "";
 		for(int i = 0; i < contents.length; i++)
 		{
-			returnme = returnme + contents[i];
+			returnme = returnme + " " + contents[i];
 		}
 		return returnme;
 	}

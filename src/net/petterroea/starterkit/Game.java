@@ -21,6 +21,8 @@ package net.petterroea.starterkit;
 import java.applet.Applet;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 /**
  * Game main class. Can be run as applet or application
  *
