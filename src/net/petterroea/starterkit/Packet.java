@@ -33,7 +33,7 @@ public class Packet {
 	/**
 	 * The prefix used to identify the packet when recieved
 	 */
-	public final String prefix = "packet";
+	public String prefix = "packet";
 	/**
 	 * Constructor for a packet. This is used for recieving, not by you.
 	 * @param contents The data in the packet

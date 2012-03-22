@@ -18,8 +18,13 @@
  */
 package net.petterroea.starterkit;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.LinkedList;
 
 /**
@@ -81,6 +86,8 @@ public class ClientSideConnection {
 	 */
 	public ClientSideConnection(String ip, int port) throws IOException
 	{
+		in = new LinkedList<Packet>();
+		out = new LinkedList<Packet>();
 		if(ip.equalsIgnoreCase("localhost"))
 		{
 			ip = InetAddress.getLocalHost().getHostAddress();
@@ -95,12 +102,14 @@ public class ClientSideConnection {
 	/**
 	 * Stops listening for packets. Allways call this before disposing the object, or you will have a listener going forever(as long as the game does)
 	 * @throws InterruptedException If the listeners could not be joined
+	 * @throws IOException If unable to close the connection
 	 */
-	public void stopListening() throws InterruptedException
+	public void stopListening() throws InterruptedException, IOException
 	{
 		listening = false;
 		inListener.join();
 		outListener.join();
+		client.close();
 	}
 	/**
 	 * Starts listening. This uses synchronization to make sure nothing is breaking the game. ALL PARTS THAT ACESS THE TWO LINKEDLISTS MUST SYNCHRONIZE TO THE SYNCH OBJECT
@@ -116,9 +125,10 @@ public class ClientSideConnection {
 				while(listening)
 				{
 					try{
+						String line = reader.readLine();
 					synchronized(synch)
 					{
-						String line = reader.readLine();
+						
 						if(line != null)
 						{
 							String[] msg = line.split("\\s+");
@@ -147,6 +157,7 @@ public class ClientSideConnection {
 						{
 							for(int i = 0; i < out.size(); i++)
 							{
+								System.out.println("Sendt the packet");
 								writer.println(out.get(i).prefix + " " + out.get(i).getRaw());
 								writer.flush();
 							}
@@ -174,9 +185,9 @@ public class ClientSideConnection {
 	 */
 	public Packet getPacket(String[] msg)
 	{
-		if(msg[0].equalsIgnoreCase("packetPrefixHere"))
+		if(msg[0].equalsIgnoreCase("ping"))
 		{
-			return new Packet(msg);
+			return new PingPacket(msg);
 		}
 		return null;
 	}

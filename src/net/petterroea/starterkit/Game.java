@@ -21,8 +21,7 @@ package net.petterroea.starterkit;
 import java.applet.Applet;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
 /**
  * Game main class. Can be run as applet or application
  *
@@ -97,12 +96,55 @@ public class Game extends Applet implements Runnable{
 	 */
 	public void run()
 	{
+		/*
+		 * Testing av multiplayer
+		 */
+		ServerSideConnection server = null;
+		ClientSideConnection conn = null;
+		ClientSideConnection conn2 = null;
+		try {
+			server = new ServerSideConnection(1338);
+			conn = new ClientSideConnection("10.0.0.8", 1338);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		server.start();
+		conn.startListening();
+		
+		/*
+		 * Ferdig testing av multiplayer
+		 */
 		long lastUpdate = System.currentTimeMillis();
 		long lastFpsUpdate = System.currentTimeMillis();
 		int fps = 0; //FPS last second
 		int frames = 0;
+		boolean pinged = false;
 		while(running)
 		{
+			if(!pinged)
+			{
+				conn.out.add(new PingPacket("oHai"));
+				pinged = true;
+			}
+			else
+			{
+				for(int i = 0; i < server.in.size(); i++)
+				{
+					if(server.in.get(i) instanceof PingPacket)
+					{
+						server.out.add(new PingPacket("haiThere"));
+					}
+				}
+				for(int i = 0; i < conn.in.size(); i++)
+				{
+					if(conn.in.get(i) instanceof PingPacket)
+					{
+						pinged = false;
+						System.out.println("Got ping!");
+					}
+				}
+			}
 			int delta = (int) (System.currentTimeMillis() - lastUpdate);
 			lastUpdate = System.currentTimeMillis();
 			if(System.currentTimeMillis() - lastFpsUpdate > 100)
