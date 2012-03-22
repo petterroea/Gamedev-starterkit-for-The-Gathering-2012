@@ -16,8 +16,7 @@ public class ClientSideConnection {
 	 */
 	public static Object synch = new Object();
 	/**
-	 * Clear the list after reading from it. This is a linkedList with all new packets
-	 * 
+	 * Clear the list after reading from it. This is a linkedList with incoming
 	 */
 	public LinkedList<Packet> in;
 	/**
@@ -28,6 +27,18 @@ public class ClientSideConnection {
 	 * The socket that connects to the server
 	 */
 	private Socket client;
+	/**
+	 * False if packet listeners should stop
+	 */
+	private boolean listening = true;
+	/**
+	 * The thread that listens
+	 */
+	Thread inListener;
+	/**
+	 * The thread the sends
+	 */
+	Thread outListener;
 	/**
 	 * Server to client packet reader
 	 */
@@ -60,29 +71,92 @@ public class ClientSideConnection {
 		connected = !client.isClosed() && client.isConnected();
 	}
 	/**
+	 * Stops listening for packets. Allways call this before disposing the object, or you will have a listener going forever(as long as the game does)
+	 * @throws InterruptedException If the listeners could not be joined
+	 */
+	public void stopListening() throws InterruptedException
+	{
+		listening = false;
+		inListener.join();
+		outListener.join();
+	}
+	/**
 	 * Starts listening. This uses synchronization to make sure nothing is breaking the game. ALL PARTS THAT ACESS THE TWO LINKEDLISTS MUST SYNCHRONIZE TO THE SYNCH OBJECT
 	 */
 	public void startListening()
 	{
-		new Thread(){ //Listener
+		listening = true;
+		inListener = new Thread(){
 			@Override
 			public void run()
 			{
-				synchronized(synch)
+				//This is recieving
+				while(listening)
 				{
-					//TODO
+					try{
+					synchronized(synch)
+					{
+						
+						String line = reader.readLine();
+						if(line != null)
+						{
+							String[] msg = line.split("\\s+");
+							in.add(getPacket(msg));
+						}						
+					}
+					//We are done checking, so sleep a little while ;)
+					Thread.sleep(10);
+					} catch(Exception e){
+						System.out.println("Error in networking: " + e);
+					}
 				}
 			}
-		}.start();
-		new Thread(){ //Writer
+		};
+		outListener = new Thread(){
 			@Override
 			public void run()
 			{
-				synchronized(synch)
+				//This is sending packets out
+				while(listening)
 				{
-					//TODO
+					try{
+					synchronized(synch)
+					{
+						if(out.size() > 0)
+						{
+							for(int i = 0; i < out.size(); i++)
+							{
+								writer.println(out.get(i).prefix + " " + out.get(i).getRaw());
+								writer.flush();
+							}
+							out.clear();
+						}
+					
+						
+						
+					}
+					//We are done checking, so sleep a little while ;)
+					Thread.sleep(10);
+					} catch(Exception e){
+						System.out.println("Error in networking: " + e);
+					}
 				}
 			}
-		}.start();
+		};
+		inListener.start();
+		outListener.start();
+	}
+	/**
+	 * Used to recognize packets by their prefix. For each new packet you add, you need to declare it here.
+	 * @param msg The contents of the packet that has just arrived from the serverside
+	 * @return A fresh, new packet object containing the data from the packet sendt over the internet
+	 */
+	public Packet getPacket(String[] msg)
+	{
+		if(msg[0].equalsIgnoreCase("packetPrefixHere"))
+		{
+			return new Packet(msg);
+		}
+		return null;
 	}
 }
