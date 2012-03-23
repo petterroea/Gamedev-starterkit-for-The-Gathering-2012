@@ -76,6 +76,7 @@ public class ServerSideConnection{
 		readBuffer = ByteBuffer.allocateDirect(255);
 		out = new LinkedList<Packet>();
 		clients = new LinkedList<ServerClient>();
+		writeBuffer = ByteBuffer.allocateDirect(255);
 		try {
 			//Open a non-blocking server socket channel
 			sSChannel = ServerSocketChannel.open();
@@ -206,7 +207,8 @@ public class ServerSideConnection{
 			    String line = sb.toString();
 			    if ((line.indexOf("\n") != -1) || (line.indexOf("\r") != -1)) {
 				line = line.trim();
-				in.add(getPacket(line.split("\\s+")));
+				System.out.println(line);
+				in.add(new Packet(line.split("\\s+")));
 				    sb.delete(0,sb.length());
 				    
 			    }
@@ -223,19 +225,6 @@ public class ServerSideConnection{
 		}
 		
 	    }
-	/**
-	 * Used to recognize packets by their prefix. For each new packet you add, you need to declare it here.
-	 * @param msg The contents of the packet that has just arrived from the serverside
-	 * @return A fresh, new packet object containing the data from the packet sendt over the internet
-	 */
-	public Packet getPacket(String[] msg)
-	{
-		if(msg[0].equalsIgnoreCase("ping"))
-		{
-			return new PingPacket(msg);
-		}
-		return null;
-	}
 	/**
 	 * Writes to a channel
 	 * @param channel The channel

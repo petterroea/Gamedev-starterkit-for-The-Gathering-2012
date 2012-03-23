@@ -185,10 +185,6 @@ public class ClientSideConnection {
 	 */
 	public Packet getPacket(String[] msg)
 	{
-		if(msg[0].equalsIgnoreCase("ping"))
-		{
-			return new PingPacket(msg);
-		}
-		return null;
+		return new Packet(msg);
 	}
 }

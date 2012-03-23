@@ -22,6 +22,8 @@ import java.applet.Applet;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.IOException;
+
+import net.petterroea.starterkit.Packet.Packettype;
 /**
  * Game main class. Can be run as applet or application
  *
@@ -124,26 +126,29 @@ public class Game extends Applet implements Runnable{
 		{
 			if(!pinged)
 			{
-				conn.out.add(new PingPacket("oHai"));
+				conn.out.add(new Packet("oHai", Packettype.PING));
+				System.out.println("Sending ping");
 				pinged = true;
 			}
 			else
 			{
 				for(int i = 0; i < server.in.size(); i++)
 				{
-					if(server.in.get(i) instanceof PingPacket)
+					if(server.in.get(i).type == Packettype.PING)
 					{
-						server.out.add(new PingPacket("haiThere"));
+						server.out.add(new Packet("haiThere", Packettype.PING));
 					}
 				}
+				server.in.clear();
 				for(int i = 0; i < conn.in.size(); i++)
 				{
-					if(conn.in.get(i) instanceof PingPacket)
+					if(conn.in.get(i).type == Packettype.PING)
 					{
 						pinged = false;
 						System.out.println("Got ping!");
 					}
 				}
+				conn.in.clear();
 			}
 			int delta = (int) (System.currentTimeMillis() - lastUpdate);
 			lastUpdate = System.currentTimeMillis();

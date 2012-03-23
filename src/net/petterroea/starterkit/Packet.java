@@ -18,7 +18,7 @@
  */
 package net.petterroea.starterkit;
 /**
- * Basic packet class. Extend this and make your own class for each type of packet.<br />
+ * Basic packet class.<br />
  * <br />
  * This is used for recieving and sending packets
  * 
@@ -31,28 +31,75 @@ public class Packet {
 	 */
 	private String[] contents;
 	/**
-	 * The prefix used to identify the packet when recieved
+	 * The prefix
 	 */
-	public String prefix = "packet";
+	public String prefix = "";
+	/**
+	 * Type, used for checking
+	 */
+	public Packettype type;
+	/**
+	 * Packet types
+	 */
+	public enum Packettype{
+		PING
+	}
 	/**
 	 * Constructor for a packet. This is used for recieving, not by you.
-	 * @param contents The data in the packet
+	 * @param temp The data in the packet
+	 * @param type The packet type
 	 */
-	public Packet(String[] contents)
+	public Packet(String[] temp, Packettype type)
 	{
-		this.contents = new String[contents.length - 1];
+		this.contents = new String[temp.length - 1];
 		for(int i = 0; i < this.contents.length; i++)
 		{
-			this.contents[i] = contents[i + 1];
+			this.contents[i] = temp[i + 1];
 		}
+		prefix = type.toString();
+		this.type = type;
 	}
 	/**
 	 * Constructor that allows you to enter the raw code. Use this for sending
 	 * @param raw Raw data that is not splitted
+	 * @param type The packet type
+	 */
+	public Packet(String raw, Packettype type)
+	{
+		contents = raw.split(" ");
+		prefix = type.toString();
+		this.type = type;
+	}
+	/**
+	 * Constructor for a packet. This is used for recieving, not by you.
+	 * @param temp The data in the packet
+	 * @param type The packet type
+	 */
+	public Packet(String[] temp)
+	{
+		prefix = Packettype.valueOf(temp[0]).toString();
+		this.contents = new String[temp.length - 1];
+		for(int i = 0; i < this.contents.length; i++)
+		{
+			this.contents[i] = temp[i + 1];
+		}
+		this.type = Packettype.valueOf(temp[0]);
+	}
+	/**
+	 * Constructor that allows you to enter the raw code. This is used for recieving
+	 * @param raw Raw data that is not splitted
+	 * @param type The packet type
 	 */
 	public Packet(String raw)
 	{
-		contents = raw.split(" ");
+		String[] temp = raw.split(" ");
+		prefix = Packettype.valueOf(temp[0]).toString();
+		this.contents = new String[temp.length - 1];
+		for(int i = 0; i < this.contents.length; i++)
+		{
+			this.contents[i] = temp[i + 1];
+		}
+		this.type = Packettype.valueOf(temp[0]);
 	}
 	/**
 	 * Get the raw data of this packet
