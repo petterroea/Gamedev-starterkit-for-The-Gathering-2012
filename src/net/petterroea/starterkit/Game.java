@@ -19,11 +19,11 @@
 package net.petterroea.starterkit;
 
 import java.applet.Applet;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.IOException;
 
-import net.petterroea.starterkit.Packet.Packettype;
+import javax.swing.JFrame;
 /**
  * Game main class. Can be run as applet or application
  *
@@ -36,11 +36,11 @@ public class Game extends Applet implements Runnable{
 	/**
 	 * Width of applet
 	 */
-	static int WIDTH = 0;
+	static int WIDTH = 400;
 	/**
 	 * Height of applet
 	 */
-	static int HEIGHT = 0;
+	static int HEIGHT = 300;
 	/**
 	 * The backBuffer used to avoid flickering
 	 */
@@ -60,6 +60,22 @@ public class Game extends Applet implements Runnable{
 	{
 		WIDTH = this.getWidth();
 		HEIGHT = this.getHeight();
+	}
+	/**
+	 * Start method
+	 * @param args The arguments
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		JFrame frame = new JFrame("Petterroea - BursdagsLAN 2012 invite");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(WIDTH, HEIGHT);
+		Game game = new Game();
+		frame.add(game);
+		frame.setVisible(true);
+		frame.setSize(WIDTH + (WIDTH - game.getWidth()), HEIGHT + (HEIGHT - game.getHeight()));
+		game.init();
+		game.start();
 	}
 	/**
 	 * Initialises the game
@@ -98,58 +114,14 @@ public class Game extends Applet implements Runnable{
 	 */
 	public void run()
 	{
-		/*
-		 * Testing av multiplayer
-		 */
-		ServerSideConnection server = null;
-		ClientSideConnection conn = null;
-		ClientSideConnection conn2 = null;
-		try {
-			server = new ServerSideConnection(1338);
-			conn = new ClientSideConnection("10.0.0.8", 1338);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		server.start();
-		conn.startListening();
-		
-		/*
-		 * Ferdig testing av multiplayer
-		 */
 		long lastUpdate = System.currentTimeMillis();
 		long lastFpsUpdate = System.currentTimeMillis();
 		int fps = 0; //FPS last second
 		int frames = 0;
-		boolean pinged = false;
 		while(running)
 		{
-			if(!pinged)
-			{
-				conn.out.add(new Packet("oHai", Packettype.PING));
-				System.out.println("Sending ping");
-				pinged = true;
-			}
-			else
-			{
-				for(int i = 0; i < server.in.size(); i++)
-				{
-					if(server.in.get(i).type == Packettype.PING)
-					{
-						server.out.add(new Packet("haiThere", Packettype.PING));
-					}
-				}
-				server.in.clear();
-				for(int i = 0; i < conn.in.size(); i++)
-				{
-					if(conn.in.get(i).type == Packettype.PING)
-					{
-						pinged = false;
-						System.out.println("Got ping!");
-					}
-				}
-				conn.in.clear();
-			}
+			reloadSize();
+			System.out.println("W: " + WIDTH + ", H: " + HEIGHT);
 			int delta = (int) (System.currentTimeMillis() - lastUpdate);
 			lastUpdate = System.currentTimeMillis();
 			if(System.currentTimeMillis() - lastFpsUpdate > 100)
@@ -164,6 +136,9 @@ public class Game extends Applet implements Runnable{
 				backBuffer = this.createImage(this.getWidth(), this.getHeight());
 			}
 			Graphics g = backBuffer.getGraphics();
+			g.setColor(Color.white);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			g.setColor(Color.black);
 			screen.tick(delta, g);
 			this.getGraphics().drawImage(backBuffer, 0, 0, null);
 		}

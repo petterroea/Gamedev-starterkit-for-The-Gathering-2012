@@ -37,7 +37,7 @@ public class Packet {
 	/**
 	 * Type, used for checking
 	 */
-	public Packettype type;
+	public Packettype type = Packettype.PING;
 	/**
 	 * Packet types
 	 */
@@ -79,11 +79,11 @@ public class Packet {
 	{
 		prefix = Packettype.valueOf(temp[0]).toString();
 		this.contents = new String[temp.length - 1];
+		this.type = Packettype.valueOf(temp[0]);
 		for(int i = 0; i < this.contents.length; i++)
 		{
 			this.contents[i] = temp[i + 1];
 		}
-		this.type = Packettype.valueOf(temp[0]);
 	}
 	/**
 	 * Constructor that allows you to enter the raw code. This is used for recieving
@@ -110,7 +110,7 @@ public class Packet {
 		String returnme = "";
 		for(int i = 0; i < contents.length; i++)
 		{
-			returnme = returnme + " " + contents[i];
+			returnme = returnme + "" + contents[i];
 		}
 		return returnme;
 	}

@@ -157,7 +157,6 @@ public class ClientSideConnection {
 						{
 							for(int i = 0; i < out.size(); i++)
 							{
-								System.out.println("Sendt the packet");
 								writer.println(out.get(i).prefix + " " + out.get(i).getRaw());
 								writer.flush();
 							}
