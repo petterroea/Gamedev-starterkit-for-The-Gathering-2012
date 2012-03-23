@@ -67,7 +67,7 @@ public class Game extends Applet implements Runnable{
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		JFrame frame = new JFrame("Petterroea - BursdagsLAN 2012 invite");
+		JFrame frame = new JFrame("Game");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(WIDTH, HEIGHT);
 		Game game = new Game();
