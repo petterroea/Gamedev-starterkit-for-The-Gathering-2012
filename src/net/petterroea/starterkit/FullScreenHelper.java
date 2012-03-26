@@ -23,6 +23,8 @@ public class FullScreenHelper {
 	 */
 	public static void setFullscreen(JFrame frame, int width, int height)
 	{
+		frame.setResizable(false);
+		frame.setUndecorated(true);
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		dev = env.getDefaultScreenDevice();
 		dev.setFullScreenWindow(frame);
@@ -35,6 +37,8 @@ public class FullScreenHelper {
 	 */
 	public static void setFullscreen(JFrame frame, DisplayMode mode)
 	{
+		frame.setResizable(false);
+		frame.setUndecorated(true);
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		dev = env.getDefaultScreenDevice();
 		dev.setFullScreenWindow(frame);
