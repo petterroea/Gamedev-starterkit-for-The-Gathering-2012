@@ -121,7 +121,6 @@ public class Game extends Applet implements Runnable{
 		while(running)
 		{
 			reloadSize();
-			System.out.println("W: " + WIDTH + ", H: " + HEIGHT);
 			int delta = (int) (System.currentTimeMillis() - lastUpdate);
 			lastUpdate = System.currentTimeMillis();
 			if(System.currentTimeMillis() - lastFpsUpdate > 100)
