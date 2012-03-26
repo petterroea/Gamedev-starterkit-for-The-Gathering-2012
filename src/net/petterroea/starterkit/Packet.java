@@ -73,7 +73,6 @@ public class Packet {
 	/**
 	 * Constructor for a packet. This is used for recieving, not by you.
 	 * @param temp The data in the packet
-	 * @param type The packet type
 	 */
 	public Packet(String[] temp)
 	{
@@ -88,7 +87,6 @@ public class Packet {
 	/**
 	 * Constructor that allows you to enter the raw code. This is used for recieving
 	 * @param raw Raw data that is not splitted
-	 * @param type The packet type
 	 */
 	public Packet(String raw)
 	{
