@@ -48,11 +48,11 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	/**
 	 * Mouse X position
 	 */
-	int mousex = 0;
+	public static int mousex = 0;
 	/**
 	 * Mouse Y position
 	 */
-	int mousey = 0;
+	public static int mousey = 0;
 	/**
 	 * An enum to make it easier to understand mouse buttons
 	 * @author petterroea

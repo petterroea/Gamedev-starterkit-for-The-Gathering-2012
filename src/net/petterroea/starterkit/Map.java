@@ -56,6 +56,7 @@ public class Map {
 	 */
 	public Map(BufferedImage src, int tilew, int tileh)
 	{
+		entities = new LinkedList<Entity>();
 		this.w = src.getWidth();
 		this.h = src.getHeight();
 		this.tileh = tileh;

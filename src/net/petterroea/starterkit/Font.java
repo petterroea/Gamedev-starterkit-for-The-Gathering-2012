@@ -80,4 +80,20 @@ public class Font {
 			}
 		}
 	}
+	/**
+	 * Gives you the width of one character
+	 * @return The width
+	 */
+	public int getCharWidth() {
+		// TODO Auto-generated method stub
+		return src[0][0].getWidth() + 1;
+	}
+	/**
+	 * Gives you the height of one character
+	 * @return The height
+	 */
+	public int getCharHeight() {
+		// TODO Auto-generated method stub
+		return src[0][0].getHeight();
+	}
 }
