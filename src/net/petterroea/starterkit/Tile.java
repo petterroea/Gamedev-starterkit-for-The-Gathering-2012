@@ -79,4 +79,20 @@ public class Tile {
 	{
 		return false;
 	}
+	/**
+	 * Checks if this is drawable in the window(In viewing range)
+	 * @param xoff X axis offset
+	 * @param yoff Y axis offset
+	 * @param tilew Width of one tile
+	 * @param tileh Height of one tile
+	 * @return True if the entity is vivible
+	 */
+	public boolean isVisible(int xoff, int yoff, int tilew, int tileh)
+	{
+		if((gridx*tilew) + xoff > Game.WIDTH || (gridy*tileh) + yoff > Game.HEIGHT)
+		{
+			return false;
+		}
+		return true;
+	}
 }

@@ -36,15 +36,15 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	/**
 	 * True if the left mouse button is active(pressed)
 	 */
-	boolean leftMouseBtn = false;
+	public static boolean leftMouseBtn = false;
 	/**
 	 * True if the right mouse button is active(pressed)
 	 */
-	boolean rightMouseBtn = false;
+	public static boolean rightMouseBtn = false;
 	/**
 	 * True if the middle mouse button is active(pressed)
 	 */
-	boolean middleMouseBtn = false;
+	public static boolean middleMouseBtn = false;
 	/**
 	 * Mouse X position
 	 */

@@ -46,11 +46,11 @@ public class Entity {
 	/**
 	 * Width of the entity
 	 */
-	public int width = 0;
+	public int width = 32;
 	/**
 	 * Height of the entity
 	 */
-	public int height = 0;
+	public int height = 32;
 	/**
 	 * The collisionbox of the entity
 	 */
@@ -72,6 +72,7 @@ public class Entity {
 	{
 		this.x = x;
 		this.y = y;
+		collisionbox = new Rectangle((int)x, (int)y, width, height); //Oppdater kollisjonsboksen
 	}
 	/**
 	 * Updates the entity's x and y postition based on x and y speed
@@ -90,22 +91,31 @@ public class Entity {
 	 * @param pos This enties position in the list
 	 */
 	public void update(int delta, LinkedList<Entity> map, int pos) {
-		Rectangle tempbox = new Rectangle((int) (x + (xspeed * delta)), (int)(y + (yspeed * delta)), width, height);
-		boolean collides = false;
+		double oldx = x;
+		double oldy = y;
+		x = x + (xspeed * delta);
+		Rectangle me = new Rectangle((int)x, (int)y, width, height);
+		//Sjekk x
 		for(int i = 0; i < map.size(); i++)
 		{
-			if(i != pos && tempbox.intersects(map.get(i).collisionbox) && (map.get(i).canCollideWith(this) || canCollideWith(map.get(i))))
+			if(i != pos && me.intersects(map.get(i).collisionbox) && (map.get(i).canCollideWith(this) || canCollideWith(map.get(i))))
 			{
-				collides = true;
+				x = oldx;
+				break;
 			}
 		}
-		if(!collides)
+		//Sjekk y
+		y = y + (yspeed * delta);
+		me = new Rectangle((int)x, (int)y, 32, 32);
+		for(int i = 0; i < map.size(); i++)
 		{
-			collisionbox = tempbox;
-			x = x + (xspeed * delta);
-			y = y + (yspeed * delta);
+			if(i != pos && me.intersects(map.get(i).collisionbox) && (map.get(i).canCollideWith(this) || canCollideWith(map.get(i))))
+			{
+				y = oldy;
+				break;
+			}
 		}
-		//collisionbox = new Rectangle((int)x, (int)y, width, height); //Oppdater kollisjonsboksen
+		collisionbox = new Rectangle((int)x, (int)y, width, height); //Oppdater kollisjonsboksen
 		
 	}
 	/**
@@ -115,32 +125,61 @@ public class Entity {
 	 * @param pos This enties position in the list
 	 */
 	public void update(int delta, Map map, int pos) {
-		Rectangle tempbox = new Rectangle((int) (x + (xspeed * delta)), (int)(y + (yspeed * delta)), width, height);
-		boolean collides = false;
+		double oldx = x;
+		double oldy = y;
+		x = x + (xspeed * delta);
+		Rectangle me = new Rectangle((int)x, (int)y, width, height);
+		//Sjekk x
 		for(int i = 0; i < map.entities.size(); i++)
 		{
-			if(pos != i && tempbox.intersects(map.entities.get(i).collisionbox) && (map.entities.get(i).canCollideWith(this) || canCollideWith(map.entities.get(i))))
+			if(i != pos && me.intersects(map.entities.get(i).collisionbox) && (map.entities.get(i).canCollideWith(this) || canCollideWith(map.entities.get(i))))
 			{
-				collides = true;
+				x = oldx;
+				break;
 			}
 		}
-		for(int xp = 0; xp < map.w; xp++)
+		if(x != oldx)
 		{
-			for(int yp = 0; yp < map.h; yp++)
+			top: for(int xp = 0; xp < map.w; xp++)
 			{
-				if(map.tiles[xp][yp].collidesWith(this))
+				for(int yp = 0; yp < map.h; yp++)
 				{
-					collides = true;
+					Rectangle col = new Rectangle(xp * map.tilew, yp * map.tileh, map.tilew, map.tileh);
+					if(me.intersects(col) && map.tiles[xp][yp].collidesWith(this))
+					{
+						x = oldx;
+						break top;
+					}
 				}
 			}
 		}
-		if(!collides)
+		//Sjekk y
+		y = y + (yspeed * delta);
+		me = new Rectangle((int)x, (int)y, this.width, this.height);
+		for(int i = 0; i < map.entities.size(); i++)
 		{
-			collisionbox = tempbox;
-			x = x + (xspeed * delta);
-			y = y + (yspeed * delta);
+			if(i != pos && me.intersects(map.entities.get(i).collisionbox) && (map.entities.get(i).canCollideWith(this) || canCollideWith(map.entities.get(i))))
+			{
+				y = oldy;
+				break;
+			}
 		}
-		//collisionbox = new Rectangle((int)x, (int)y, width, height); //Oppdater kollisjonsboksen
+		if(y != oldy)
+		{
+			top: for(int xp = 0; xp < map.w; xp++)
+			{
+				for(int yp = 0; yp < map.h; yp++)
+				{
+					Rectangle col = new Rectangle(xp * map.tilew, yp * map.tileh, map.tilew, map.tileh);
+					if(me.intersects(col) && map.tiles[xp][yp].collidesWith(this))
+					{
+						y = oldy;
+						break top;
+					}
+				}
+			}
+		}
+		collisionbox = new Rectangle((int)x, (int)y, width, height); //Oppdater kollisjonsboksen
 		
 	}
 	/**

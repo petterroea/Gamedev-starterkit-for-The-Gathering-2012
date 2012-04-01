@@ -100,11 +100,11 @@ public class Map {
 	public void draw(Graphics g)
 	{
 		//Modify this if you want to use a different drawing method
-		for(int x = 0; x < tilew; x++)
+		for(int x = 0; x < w; x++)
 		{
-			for(int y = 0; y < tileh; y++)
+			for(int y = 0; y < h; y++)
 			{
-				if(tiles[x][y] != null)
+				if(tiles[x][y] != null && tiles[x][y].isVisible(xoff, yoff, tilew, tileh))
 				{
 					g.drawImage(tiles[x][y].getTile(this), (x * tilew) + xoff, (y * tileh) + yoff, null);
 				}

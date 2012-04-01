@@ -1,0 +1,73 @@
+CHANGELOG(Using commit comments and my own memory. Not complete changelog)
+
+
+0.1:
+
+First commit
+
+0.2:
+
+Updated packet.java for better understanding
+
+0.3:
+
+Updated javadoc
+Added clientside constructor and listener threads
+
+0.4:
+
+Started on IO system for packets in clientside
+
+0.5:
+
+Finished the clientside Multiplayer framework
+
+0.6:
+
+Nearly done serverside
+
+0.7:
+
+Finished serverside networking. Tested it with a program that pings and pongs. Got 70ms latency.
+
+1.0:
+
+Completed starterkit. Minor bugfixes
+
+1.1:
+
+Updated the javadoc .zip
+
+1.2:
+
+Fixed a window caption fail because i used window code originally intended for a intro i made
+
+1.3:
+
+Added basic fullscreen support
+
+1.4:
+
+Updated README
+
+1.5:
+
+Removed debugtext printing out to console all of the time
+
+1.6:
+
+Added properties system
+
+1.7:
+
+Added fix for fullscreen system(Some kind of NullPointerException)
+
+1.8:
+
+Fixed a few minor bugs, like the list of entities in a map not being initalized.
+
+1.9:
+
+Fixed the collision box in entity being null
+Fixed entity movement. Now handles x and y movement seperate
+Fixed input mouse buttons not being static
